@@ -3,11 +3,17 @@ import { convertToFlag } from "./functions";
 import Weather from "./components/Weather";
 
 class App extends React.Component {
-  state = { location: "", isLoading: false, displayLocation: "", weather: {} };
+  state = { location: "Brisbane", isLoading: false, displayLocation: "", weather: {} };
 
+  // constructor(props) {
+  //   super(props);
+  //   this.fetchWeather = this.fetchWeather.bind(this);
+  // }
+
+  // async fetchWeather() {
+  // Using an arrow func instead of a method so we can get rid of the constructor and
+  // event handlers are automatically bound to this
   fetchWeather = async () => {
-    if (this.state.location.length < 2) return this.setState({ weather: {} });
-
     console.log("loading data");
     // console.log(this);
 
@@ -32,7 +38,7 @@ class App extends React.Component {
       const weatherData = await weatherRes.json();
       this.setState({ weather: weatherData.daily });
     } catch (err) {
-      console.error(err);
+      console.err(err);
     } finally {
       this.setState({ isLoading: false });
     }
@@ -40,27 +46,13 @@ class App extends React.Component {
 
   setLocation = (e) => this.setState({ location: e.target.value });
 
-  // useEffect []
-  componentDidMount() {
-    // No location at App mount
-    // this.fetchWeather();
-    this.setState({ location: localStorage.getItem("location") || "" });
-  }
-
-  // useEffect [location]
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.location !== prevState.location) {
-      this.fetchWeather();
-      localStorage.setItem("location", this.state.location);
-    }
-  }
-
   render() {
     return (
       <div className="app">
         <h1>Classy Weather</h1>
         <InputField location={this.state.location} onChangeLocation={this.setLocation} />
 
+        <button onClick={this.fetchWeather}>Get weather</button>
         {this.state.isLoading && <p className="loader">Loading...</p>}
 
         {this.state.weather.weathercode && (
@@ -79,7 +71,7 @@ class InputField extends React.Component {
       <div>
         <input
           type="text"
-          placeholder="Search for a location..."
+          placeholder="Search for location..."
           value={this.props.location}
           onChange={this.props.onChangeLocation}
         ></input>

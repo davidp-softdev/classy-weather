@@ -2,6 +2,11 @@ import React from "react";
 import Day from "./Day";
 
 class Weather extends React.Component {
+  // Similar to a cleanup function at the end of a useEffect
+  componentWillUnmount() {
+    // console.log("Weather will unmount");
+  }
+
   render() {
     // console.log(this.props);
     const {
